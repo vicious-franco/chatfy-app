@@ -36,14 +36,14 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModel({
-      fullName: fullName,
-      email: email,
+      fullName: fullName.trim(),
+      email: email.trim().toLowerCase(),
       password: hashedPassword,
     });
 
     if (newUser) {
-      generateToken(newUser._id, res);
       await newUser.save();
+      generateToken(newUser._id, res);
       res.status(201).json({
         success: true,
         data: {
